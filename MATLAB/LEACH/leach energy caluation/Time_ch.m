@@ -1,0 +1,18 @@
+el=0.0013*10^-12; es=10*10^-12; Ee=50*10^-9; Ebf=5*10^-9;
+n=1000; M=100; d=100; l=4000; r=250*10^3;
+Estart=0.1;
+[m,k]=meshgrid([1:1:20],[1:2.5:50]);
+Ech_elect=l.*(Ee.*(n./k)+Ebf.*((n./k)-1)+es*d^2);
+Enon_ch_elect=l.*(Ee.*(1+k)+(k.*Ebf)+es.*((M*M)./(2*3.14159*k)));
+Ech_frame=l.*(((n./k)-m)*Ebf+(el*d^4)+((n./k)-m+1)*Ee);
+Enon_ch_frame=l*(Ee+es.*((M^2)./(2*3.14159*k)));
+f1=1./(((n./k)-m+1).*k);
+f2=((n./k)-m)./(((n./k)-m+1).*k);
+p1=((m.*Estart)-Ech_elect-Enon_ch_elect);
+p2=(f1.*Ech_frame)+(f2.*Enon_ch_frame);
+Nf=p1./p2;
+ti=Nf.*(n./k-(m-1))*(l/r);
+surf(k,m,ti);
+xlabel('# of clusters, k', 'FontSize',14)
+ylabel('Head-Set Size', 'FontSize',14)
+zlabel('Time for one iteration (sec)','FontSize',14)
