@@ -1,0 +1,8 @@
+subplot(2,2,1);
+plot(r,STATISTICS.DEAD); 表示轮数和死亡节点数
+subplot(2,2,2);
+plot(r,STATISTICS.ALLIVE);表示轮数和生存节点数
+subplot(2,2,3);
+plot(r,STATISTICS.PACKETS_TO_BS);表示轮数和CH发送到BS的数据
+subplot(2,2,4);
+plot(r,STATISTICS.COUNTCHS);表示轮数和CH数

@@ -1,0 +1,162 @@
+基本步骤
+（1）开始阶段首先建立簇，对监测区域的节点进行初始化，节点区域的初步划分；
+（2）基站广播初始化信息，节点接收自己分配到的相关信息及地理位置信息；
+（3）判断节点存活，各节点计算其自身的能量和距离Sink节点的距离，并计算综合实力值Pi；
+（4）判断参与簇头选举的条件以及计算T（n），kopt（最优簇头数）；
+（5）满足成为簇头的条件，选举簇头
+（6）若成为簇头，则广播自己成为簇头的消息以及自身相关的信息，其他节点根据接收到的信息自动选择要加入的簇，
+此时簇头需要判断簇成员数量是否达到簇头所承受的最大簇成员数目，依据此来确定加入的簇成员节点；若未成为簇头，
+则等待附近簇头节点发来的广播信息；
+（7）簇头节点选择自身所加入的簇，从簇内随机选择自己的下一跳节点，即下一跳簇头节点，形成初始簇路由路径；
+（8）利用遗传算法和模拟退火算法相结合的算法解决簇头多路由路径问题，找出最优路由，进行下一代迭代；
+（9）判断迭代次数是否超过设定的最大迭代次数，若大于等于最大迭代次数，则终止算法；若小于，则跳回（3）；
+（10）输出实验结果。
+
+
+
+
+(1)簇首选择模块
+if Rounds==k/Pch+1；%轮开始，k为，Pch为
+   for i=1:NodeNums
+        if  StateNode(i)==1   %判断节点存活
+             if rand(1,1)<Threshold   %判断该节点是否有机会成为簇头
+                 ClusterHeads(Rounds,i)=1;%该节点是簇头
+                 Node.s(i)=((Node.x(i)-Bx).^2+((Node.y(i)-By).^2;
+                 Node.c(i）=TOS_LOCAL_ADDRESS;
+                 Node.initclEn(i)=EnNode(i)
+              else    ClusterHeads(Rounds,i)=0;%该节点不是簇头，即是簇成员
+                      Node.initclEn(i)=EnNode(i);
+              end
+           end
+        end
+elseif Rounds==k/Pch;
+    for i=1:NodeNums
+       if  StateNode(i)==1
+           for j=(Rounds-19):(Rounds-1)
+               if ClusterHeads(j,i)~=0
+                   ClusterHeads(Rounds,i)=0;
+                   Node.s(i)=maxs;
+                   break;
+               elseif rand(1,1)<Thrshold
+                        ClusterHeads(Rounds,i)=1;
+                        Node.s(i)=((Node.x(i)-Bx).^2)+((Node.y(i)-By).^2;
+                        Node.c(i)=TOS_LOCAL_ADDRESS;
+                        Node.initclEn(i)=EnNode(i);
+               else   ClusterHeads(Rounds,i)=0;
+                        Node.initclEn(i)=EnNode(i);
+                 end
+             end
+          end
+    end
+else for i=1:NodeNums
+           if StateNode(i)==1  %判断节点存活
+               for j=(k/Pch+1):(Rounds-1)
+                      if ClusterHeads(j,i)~=0
+                           ClusterHeads(Rounds,i)=0;
+                           Node.s(i)=maxs;
+                           break;
+                       elseif rand(1,1)<Thrshold
+                              ClusterHeads(Rounds,i)=1;
+                              Node.s(i)=((Node.x(i)-Bx).^2)+((Node.y(i)-By).^2;
+                              Node.c(i)=TOS_LOCAL_ADDRESS;
+                              Node.initclEn(i)=EnNode(i);
+                   else   ClusterHeads(Rounds,i)=0;
+                             Node.initclEn(i)=EnNode(i);
+                   end
+               end
+          end
+    end
+end
+if sum(ClusterHeads(Rounds,:))==0   %若本轮簇头数为0进行下一轮选择
+     AliveNode(Rounds)=AliveNode(Rounds-1);%存活节点数与上轮相同
+     AmountData(Rounds)=AmountData(Rounds-1);
+     coutinue;
+end
+
+EntranPch=Elec*Ctrbit+Efs*Ctrbit*((Tr.^2+Tr.^2));%簇头广播自己是簇头消息的能耗
+
+for i=1:NodeNums
+       if ClusterHeads(Rounds,i)~=0  %(包括第二层簇头）1，2
+            if  EnNode(i)>=EntranPCH  %传输一个广播包的能耗
+                   EnNode(i)=EnNode(i)-EntranPCH;
+            eles
+                 StateNode(i)=0
+            end
+       end
+ end
+for i=1:NodeNums
+      if  StateNode(i)==1   %判断节点存活
+          if ClusterHeads(Rounds,i)~=1   %节点不是簇头
+               for j=1:NodeNums
+                 if ClusterHeads(Rounds,j)==1
+                     dist=((Node.x(i)-Node.x(j)).^2+((Node.y(i)-Node.y(j)).^2);%距离的平方
+                     EnRecP=Elec*Ctrbit;%ctr
+                     if   EnNode(i)>=EnRecP   %接收一个广播包的能耗
+                             EnNode(i)=EnNode（i）-EnRecP;
+                      else
+                            StateNode(i)=0;
+                      end
+                      if  Node.d(i)==0   %选举簇头
+                            Node.d(i)=dist;
+                            Node.c(i)=j;
+                      else
+                            if  Node.d(i)>dist
+                                Node.d(i)=dist;
+                                Node.c(i)=j;
+                            end
+                      end
+                 end
+
+(2)多跳路由模块
+for i=NodeNums
+    if ClusterHeads(Rounds,i)==1
+         Node.d(i)=((Node.x(i)-Node.x(indice)).^2)+((Node.y(i)-Node.y(indice)).^2;%第一层簇头到第二层簇头的距离
+    end
+end
+alldata=0;
+for i=1:NodeNums
+    if StateNode(i)==1
+          if ClusterHeads(Rounds,i)==1
+              TolLengthPacket=Kbit.*Node.csize(i);
+              alldata=alldata+TolLengthPacket;
+              EntranPCH=Eda*TolLengthPacket+Elec*Kbit+Efs*Kbit*(Node.d(i));%将数据融合后发送至第二层簇头
+              if EnNode(i)>=EntranPCH
+                EnNode(i)=EnNode(i)-EntranPCH;
+               else
+                       stateNode(i)=0;
+               end
+
+           elseif ClusterHeads(Rounds,i)==2
+                 Node.d(i)=((Node.x(i)-Bx).^2)+((Node.y(i)-By).^2);%第二层簇头节点直接与BS通信
+                 TolLengthPacket=Kbit.*Node.csize(i);
+                 alldata=alldata+TolLengthPacket;
+                 EnFuse1=Eda*TolLengthPacket;%将第一次接收到的普通节点的数据数据融合
+                 EnFuse2=Elec*(sum(ClusterHeads(Rounds,:)==1))*Kbit+Eda*(sum(ClusterHeads(Rounds,:)~=0))*Kbit;%将第二层接收到的第一层节点发送的数据融合
+                 EntranPCH2=EnFuse1+EnFuse2+Emp*Kbit*(Node.d(i));%将融合数据发送至BS
+              if EnNode(i)>=EntranPCH2
+                EnNode(i)=EnNode(i)-EntranPCH2;
+               else
+                       stateNode(i)=0;
+               end
+               else          %普通节点
+                    % if Rounds>=2
+                    %    if abs(Node.sense(Rounds,i)-Node.sense(Rounds-1,i))>=0.2*Node.sense(Rounds-1,i)  %感知数据变化超过上轮10%才发送！
+                       EnTranP=Elec*Node.1(i)+Efs*Node.1(i)*(Node.d(i));
+                     %EnTranP-EnTranP.*TDMA;
+                     if  EnNode(i)>=EnTranP
+                          EnNode(i)=EnNode(i)-EnTranP;
+                     else
+                        StateNode(i)=0;%该节点死亡
+                     end
+                     EnRecP=Elec*Node.1(i)；
+                    %EnRecP=EnRecP.*Node.csize(i)；
+                     if Node.c(i)~=TOS_LOCAL_ADDRESS   %普通节点i不直接与BS通信
+                        if  EnNode(Node.c(i))>=EnRecP
+                                 EnNode(Node.c(i))=EnNode(Node.c(i))-EnRecP；
+                        else
+                            StateNode（Node.c(i))=0;
+                        end
+                    end
+              end
+       end
+ end
